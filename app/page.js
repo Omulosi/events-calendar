@@ -11,38 +11,25 @@ import { v4 as uuidv4 } from "uuid";
 import AddEventModal from "@components/AddEventModal";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import { addEvent, getEvent, EVENT_KEY, INITIAL_EVENTS } from "@utils/events";
-import EventDetailsModal from "@components/EventDetailsModal";
-import EventDetailsDrawer from "@components/EventDetailsDrawer";
 import Drawer from "@components/Drawer";
-import Card from "@components/Card";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import useAllEvents from "@hooks/useAllEvents";
+import useEvent from "@hooks/useEvent";
+import List from "@components/List";
+import EventItem from "@components/EventItem";
+import { startCase } from "@utils/helpers";
+import { Button } from "@radix-ui/themes";
 
 const EventCalendar = () => {
   const [weekendsVisible, setWeekendsVisible] = useState(true);
-  const [currentEvents, setCurrentEvents] = useState([]);
   const [openAddEventModal, setOpenAddEventModal] = useState(false);
   const [eventDetails, setEventDetails] = useState(null);
-  const [openContextMenu, setOpenContextMenu] = useState(true);
   const [currentEvent, setCurrentEvent] = useState(null);
   const [openCurrentEventModal, setOpenCurrentEventModal] = useState(false);
-  const [error, setError] = useState(null);
-  const [allEvents, setAllEvents] = useState([]);
 
   const router = useRouter();
-  // const { data: session } = useSession();
-
-  const fetchEvents = async () => {
-    const response = await fetch("/api/event");
-    const data = await response.json();
-    const eventList = data.map((event) => ({ ...event, id: event._id }));
-    setAllEvents(eventList);
-  };
-
-  useEffect(() => {
-    fetchEvents();
-  }, []);
+  const { allEvents } = useAllEvents();
 
   const initialValues = {
     title: "",
@@ -59,9 +46,7 @@ const EventCalendar = () => {
     validationSchema,
     onSubmit: async (values, { resetForm, setSubmitting }) => {
       try {
-        alert("submitting");
         let calendarApi = eventDetails.view.calendar;
-
         calendarApi.unselect(); // clear date selection
 
         const newEvent = {
@@ -72,8 +57,6 @@ const EventCalendar = () => {
           end: eventDetails.endStr,
           allDay: eventDetails.allDay,
         };
-
-        console.log(newEvent);
 
         calendarApi.addEvent(newEvent);
 
@@ -122,9 +105,8 @@ const EventCalendar = () => {
     }
   };
 
-  const handleEventClick = (clickInfo) => {
-    setOpenContextMenu(true);
-    const eventId = clickInfo.event.id;
+  const handleEventClick = ({ event }) => {
+    const eventId = event.id;
     // Todo: Get event from server
     const currentEvent = allEvents.filter((event) => event?.id === eventId);
     setCurrentEvent(currentEvent);
@@ -132,14 +114,7 @@ const EventCalendar = () => {
     // Show event
   };
 
-  const handleEvents = () => {
-    // Todo: Get events from localstorage/ API
-    // const eventList = getEvent({ key: EVENT_KEY }) || [];
-    console.log({ allEvents });
-    setCurrentEvents(allEvents);
-  };
-
-  console.log({ allEvents, eventDetails, currentEvents });
+  console.log({ allEvents, currentEvent });
 
   return (
     <div className="demo-app">
@@ -157,7 +132,32 @@ const EventCalendar = () => {
         data={currentEvent}
         title="Event Details"
       >
-        <Card />
+        <List>
+          {currentEvent?.length > 0 &&
+            Object.entries(currentEvent[0]).map(([key, value]) => {
+              if (!value || key.toLocaleLowerCase().includes("id") || key.toLowerCase().includes("_")) {
+                return null;
+              }
+              if (!(typeof value === "string")) {
+                return null;
+              }
+              return <EventItem title={startCase({ word: key })} subTitle={startCase({ word: value })} key={key} />;
+            })}
+        </List>
+        <div className="p-4 flex justify-start gap-3">
+          <Button
+            variant="outline"
+            color="gray"
+            onClick={() => {
+              /** Edit */
+            }}
+          >
+            Edit
+          </Button>
+          <Button color="tomato" variant="solid">
+            Delete
+          </Button>
+        </div>
       </Drawer>
 
       <SideBar allEvents={allEvents} weekendsVisible={weekendsVisible} handleWeekendsToggle={handleWeekendsToggle} />
@@ -175,17 +175,31 @@ const EventCalendar = () => {
           selectMirror={true}
           dayMaxEvents={true}
           weekends={weekendsVisible}
+          events={allEvents}
           initialEvents={allEvents} // alternatively, use the `events` setting to fetch from a feed
           select={handleDateSelect}
           eventContent={(event) => <EventContent eventInfo={event} />} // custom render function
           eventClick={handleEventClick}
-          eventsSet={handleEvents} // called after events are initialized/added/changed/removed
-          eventAdd={(evt) => {}}
-          /* you can update a remote database when these fire:
-            eventAdd={function(){}}
-            eventChange={function(){}}
-            eventRemove={function(){}}
-            */
+          eventAdd={(evt) => {
+            console.log("Event Added");
+          }}
+          eventChange={function ({ event }) {
+            console.log("Event changed");
+            const changedEvent = {
+              id: event.id,
+              start: event.start,
+              end: event.end,
+              startStr: event.startStr,
+              endStr: event.endStr,
+              title: event.title,
+              allDay: event.allDay,
+            };
+            console.log({ changedEvent });
+          }}
+          eventRemove={function ({ event }) {
+            console.log("Event removed");
+            const eventId = event.id;
+          }}
         />
       </div>
     </div>

@@ -1,7 +1,3 @@
-import { useState } from "react";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
-
 import { Flex, Text, Button, Dialog, TextField } from "@radix-ui/themes";
 
 const AddEventModal = ({ open, setOpen, data, handleChange, handleSubmit, isSubmitting = false }) => {

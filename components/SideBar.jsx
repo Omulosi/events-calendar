@@ -1,6 +1,7 @@
 import SideBarEvent from "./SideBarEvent";
 import List from "./List";
 import EventItem from "./EventItem";
+import { formatDateItem, startCase } from "@utils/helpers";
 
 const EVENT_LIST_TOTAL = 5;
 
@@ -26,7 +27,7 @@ const SideBar = ({ weekendsVisible, handleWeekendsToggle, allEvents }) => {
         <hr />
         <List>
           {allEvents?.slice(0, EVENT_LIST_TOTAL).map(({ title, start, id }, ind) => (
-            <EventItem title={title} time={start} key={ind} />
+            <EventItem title={startCase({ word: title })} subTitle={formatDateItem({ time: start })} key={ind} />
           ))}
         </List>
       </div>
