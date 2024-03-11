@@ -111,7 +111,7 @@ const LoginModal = () => {
                 type="submit"
                 variant="contained"
                 size="large"
-                style={{ backgroundColor: "rgb(36, 153, 239)", color: "#fff" }}
+                style={{ backgroundColor: "#2c3e50", color: "#fff" }}
                 endIcon={isSubmitting ? <CircularProgress color="inherit" size={25} /> : null}
               >
                 Sign In
