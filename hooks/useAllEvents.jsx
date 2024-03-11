@@ -1,31 +1,24 @@
-import React, { useState, useEffect } from "react";
+"use client";
 
-const useAllEvents = () => {
-  const [allEvents, setAllEvents] = useState([]);
-  const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+import useSwr from "swr";
 
-  const fetchEvents = async () => {
-    try {
-      setIsLoading(true);
-      setError(null);
-      const response = await fetch("/api/event");
-      const data = await response.json();
-      const eventList = data.map((event) => ({ ...event, id: event._id, backgroundColor: "red", borderColor: "red" }));
-      setAllEvents(eventList);
-    } catch (err) {
-      console.log(err);
-      setError("Error fetching events");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+const fetcher = (url) => fetch(url).then((r) => r.json());
 
-  useEffect(() => {
-    fetchEvents();
-  }, []);
+const useAllEvents = (params) => {
+  const { data, isLoading, error, mutate } = useSwr("/api/event", fetcher);
+  console.log({ data });
+  let eventList = data?.map((event) => {
+    const randomColor = Math.floor(Math.random() * 16777215).toString(16);
+    let eventColor = `#${randomColor}`;
+    eventColor = "rgb(121, 134, 203)"; // lavender: rgb(121, 134, 203), bluebearry: rgb(63, 81, 181)
+    return { ...event, id: event._id, backgroundColor: eventColor, borderColor: eventColor };
+  });
 
-  return { allEvents, error, isLoading };
+  if (!params?.session) {
+    eventList = [];
+  }
+
+  return { allEvents: eventList || [], error, isLoading, mutate };
 };
 
 export default useAllEvents;

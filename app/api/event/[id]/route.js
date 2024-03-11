@@ -15,21 +15,44 @@ export const GET = async (request, { params }) => {
 };
 
 export const PATCH = async (request, { params }) => {
-  const { Event, tag } = await request.json();
+  const { title, description, color, creator, start, end, allDay } = await request.json();
 
   try {
     await connectToDB();
 
-    // Find the existing Event by ID
     const existingEvent = await Event.findById(params.id);
 
     if (!existingEvent) {
       return new Response("Event not found", { status: 404 });
     }
 
-    // Update the Event with new data
-    existingEvent.title = title;
-    existingEvent.description = description;
+    if (title) {
+      existingEvent.title = title;
+    }
+
+    if (description) {
+      existingEvent.description = description;
+    }
+
+    if (color) {
+      existingEvent.color = color;
+    }
+
+    if (creator) {
+      existingEvent.creator = creator;
+    }
+
+    if (start) {
+      existingEvent.start = start;
+    }
+
+    if (end) {
+      existingEvent.end = end;
+    }
+
+    if (allDay) {
+      existingEvent.allDay = allDay;
+    }
 
     await existingEvent.save();
 
@@ -48,6 +71,7 @@ export const DELETE = async (request, { params }) => {
 
     return new Response("Event deleted successfully", { status: 200 });
   } catch (error) {
+    console.log(error);
     return new Response("Error deleting Event", { status: 500 });
   }
 };

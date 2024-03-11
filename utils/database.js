@@ -11,7 +11,7 @@ export const connectToDB = async () => {
   }
 
   try {
-    console.log("================================DB CONNECTION ================================");
+    console.log("================================ DB CONNECTION ================================");
     console.log(process.env.MONGODB_URI);
     await mongoose.connect(process.env.MONGODB_URI, {
       dbName: "events_db",

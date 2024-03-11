@@ -14,10 +14,10 @@ const UserSchema = new Schema({
   //     "Username invalid, it should contain 8-20 alphanumeric letters and be unique!",
   //   ],
   // },
-  password: {
-    type: String,
-    required: [true, "Password is required"],
-  },
+  // password: {
+  //   type: String,
+  //   required: [true, "Password is required"],
+  // },
 });
 
 const User = models.User || model("User", UserSchema);

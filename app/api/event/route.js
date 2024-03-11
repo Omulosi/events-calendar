@@ -5,6 +5,7 @@ export const GET = async (request) => {
   try {
     await connectToDB();
 
+    // Find by creator, filter by month
     const events = await Event.find({}); //.populate("creator");
 
     return new Response(JSON.stringify(events), { status: 200 });

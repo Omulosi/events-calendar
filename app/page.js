@@ -20,6 +20,9 @@ import List from "@components/List";
 import EventItem from "@components/EventItem";
 import { startCase } from "@utils/helpers";
 import { Button } from "@radix-ui/themes";
+import { useSWRConfig } from "swr";
+import NavBar from "@components/NavBar";
+import { Box, Divider } from "@mui/material";
 
 const EventCalendar = () => {
   const [weekendsVisible, setWeekendsVisible] = useState(true);
@@ -28,8 +31,14 @@ const EventCalendar = () => {
   const [currentEvent, setCurrentEvent] = useState(null);
   const [openCurrentEventModal, setOpenCurrentEventModal] = useState(false);
 
+  const { data: session } = useSession();
+
+  const { mutate } = useSWRConfig();
+
   const router = useRouter();
-  const { allEvents } = useAllEvents();
+
+  // Todo: Pass month - get all events for current month by default.
+  const { allEvents } = useAllEvents({ session });
 
   const initialValues = {
     title: "",
@@ -37,7 +46,7 @@ const EventCalendar = () => {
   };
 
   const validationSchema = Yup.object({
-    title: Yup.string(),
+    title: Yup.string().required(),
     description: Yup.string(),
   });
 
@@ -77,8 +86,9 @@ const EventCalendar = () => {
 
         if (response.ok) {
           // Close modal
-          setOpenAddEventModal(false);
           router.push("/");
+          mutate("/api/event");
+          setOpenAddEventModal(false);
         }
       } catch (error) {
         console.log({ error });
@@ -98,7 +108,7 @@ const EventCalendar = () => {
     setEventDetails(selectInfo);
   };
 
-  const handleDeleteEvent = (eventInfo) => {
+  const handleDeleteEvent = ({ eventInfo }) => {
     //
     if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
       eventInfo.event.remove();
@@ -114,95 +124,105 @@ const EventCalendar = () => {
     // Show event
   };
 
-  console.log({ allEvents, currentEvent });
+  const handleEditEvent = ({ event }) => {};
 
   return (
-    <div className="demo-app">
-      <AddEventModal
-        open={openAddEventModal}
-        setOpen={setOpenAddEventModal}
-        data={values}
-        handleChange={handleChange}
-        handleSubmit={handleSubmit}
-      />
+    <Box>
+      <NavBar />
 
-      <Drawer
-        isOpen={openCurrentEventModal}
-        setIsOpen={setOpenCurrentEventModal}
-        data={currentEvent}
-        title="Event Details"
-      >
-        <List>
-          {currentEvent?.length > 0 &&
-            Object.entries(currentEvent[0]).map(([key, value]) => {
-              if (!value || key.toLocaleLowerCase().includes("id") || key.toLowerCase().includes("_")) {
-                return null;
-              }
-              if (!(typeof value === "string")) {
-                return null;
-              }
-              return <EventItem title={startCase({ word: key })} subTitle={startCase({ word: value })} key={key} />;
-            })}
-        </List>
-        <div className="p-4 flex justify-start gap-3">
-          <Button
-            variant="outline"
-            color="gray"
-            onClick={() => {
-              /** Edit */
-            }}
-          >
-            Edit
-          </Button>
-          <Button color="tomato" variant="solid">
-            Delete
-          </Button>
-        </div>
-      </Drawer>
+      <Divider />
 
-      <SideBar allEvents={allEvents} weekendsVisible={weekendsVisible} handleWeekendsToggle={handleWeekendsToggle} />
-      <div className="demo-app-main">
-        <FullCalendar
-          plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-          headerToolbar={{
-            left: "prev,next today",
-            center: "title",
-            right: "dayGridMonth,timeGridWeek,timeGridDay",
-          }}
-          initialView="dayGridMonth"
-          editable={true}
-          selectable={true}
-          selectMirror={true}
-          dayMaxEvents={true}
-          weekends={weekendsVisible}
-          events={allEvents}
-          initialEvents={allEvents} // alternatively, use the `events` setting to fetch from a feed
-          select={handleDateSelect}
-          eventContent={(event) => <EventContent eventInfo={event} />} // custom render function
-          eventClick={handleEventClick}
-          eventAdd={(evt) => {
-            console.log("Event Added");
-          }}
-          eventChange={function ({ event }) {
-            console.log("Event changed");
-            const changedEvent = {
-              id: event.id,
-              start: event.start,
-              end: event.end,
-              startStr: event.startStr,
-              endStr: event.endStr,
-              title: event.title,
-              allDay: event.allDay,
-            };
-            console.log({ changedEvent });
-          }}
-          eventRemove={function ({ event }) {
-            console.log("Event removed");
-            const eventId = event.id;
-          }}
+      <div className="app">
+        <AddEventModal
+          open={openAddEventModal}
+          setOpen={setOpenAddEventModal}
+          data={values}
+          handleChange={handleChange}
+          handleSubmit={handleSubmit}
+          key={eventDetails}
         />
+
+        {/** Show details of currently selected event */}
+        <Drawer isOpen={openCurrentEventModal} setIsOpen={setOpenCurrentEventModal} data={currentEvent} title="">
+          <List>
+            {currentEvent?.length > 0 &&
+              Object.entries(currentEvent[0]).map(([key, value]) => {
+                if (!value || key.toLocaleLowerCase().includes("id") || key.toLowerCase().includes("_")) {
+                  return null;
+                }
+                if (!(typeof value === "string")) {
+                  return null;
+                }
+
+                if (key?.toLowerCase().includes("color")) {
+                  return null;
+                }
+                return <EventItem title={startCase({ word: key })} subTitle={startCase({ word: value })} key={key} />;
+              })}
+          </List>
+          <div className="p-4 flex justify-start gap-3">
+            <Button
+              variant="outline"
+              color="gray"
+              onClick={() => {
+                /** Edit */
+              }}
+            >
+              Edit
+            </Button>
+            <Button color="tomato" variant="solid">
+              Delete
+            </Button>
+          </div>
+        </Drawer>
+
+        {/** LH Side bar showing a list of events */}
+        <SideBar allEvents={allEvents} weekendsVisible={weekendsVisible} handleWeekendsToggle={handleWeekendsToggle} />
+
+        <div className="demo-app-main">
+          <FullCalendar
+            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+            headerToolbar={{
+              left: "prev,next today",
+              center: "title",
+              right: "dayGridMonth,timeGridWeek,timeGridDay",
+            }}
+            initialView="dayGridMonth"
+            editable={true}
+            selectable={true}
+            selectMirror={true}
+            dayMaxEvents={true}
+            weekends={weekendsVisible}
+            events={allEvents}
+            initialEvents={allEvents} // alternatively, use the `events` setting to fetch from a feed
+            select={handleDateSelect}
+            eventContent={(event) => <EventContent eventInfo={event} />} // custom render function
+            eventClick={handleEventClick}
+            eventAdd={({ event }) => {
+              console.log("Event Added");
+              mutate("/api/event");
+            }}
+            eventChange={function ({ event }) {
+              console.log("Event changed");
+              const changedEvent = {
+                id: event.id,
+                start: event.start,
+                end: event.end,
+                startStr: event.startStr,
+                endStr: event.endStr,
+                title: event.title,
+                allDay: event.allDay,
+              };
+              console.log({ changedEvent });
+            }}
+            eventRemove={function ({ event }) {
+              console.log("Event removed");
+              const eventId = event.id;
+            }}
+          />
+        </div>
       </div>
-    </div>
+    </Box>
   );
 };
 

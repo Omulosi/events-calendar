@@ -1,37 +1,48 @@
 import SideBarEvent from "./SideBarEvent";
-import List from "./List";
-import EventItem from "./EventItem";
 import { formatDateItem, startCase } from "@utils/helpers";
-
-const EVENT_LIST_TOTAL = 5;
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import BasicCalendar from "./BasicCalendar";
+import { Box, Divider, Grid } from "@mui/material";
+import { H6 } from "@components/Typography";
+import ListCard from "./ListCard";
+import { useState } from "react";
 
 const SideBar = ({ weekendsVisible, handleWeekendsToggle, allEvents }) => {
+  const now = new Date();
+
   console.log({ allEvents });
+
+  const todaysEvents = allEvents?.filter(
+    (event) => new Date(event.start).toLocaleDateString() === now.toLocaleDateString()
+  );
+
+  const handleMoreOpen = () => {};
+
   return (
-    <div className="demo-app-sidebar">
-      <div className="demo-app-sidebar-section">
-        <h2>Instructions</h2>
-        <ul>
-          <li>Select dates and you will be prompted to create a new event</li>
-          <li>Drag, drop, and resize events</li>
-          <li>Click an event to delete it</li>
-        </ul>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <div className="demo-app-sidebar">
+        <Box>
+          <BasicCalendar />
+        </Box>
+
+        <div className="demo-app-sidebar-section">
+          <label>
+            <input type="checkbox" checked={weekendsVisible} onChange={handleWeekendsToggle}></input> Toggle weekends
+          </label>
+        </div>
+
+        <div className="demo-app-sidebar-section">
+          <H6 sx={{ textTransform: "uppercase" }}>Todays Events</H6>
+          <Divider />
+          <Box>
+            {todaysEvents.map((item) => (
+              <ListCard item={item} handleMore={handleMoreOpen} />
+            ))}
+          </Box>
+        </div>
       </div>
-      <div className="demo-app-sidebar-section">
-        <label>
-          <input type="checkbox" checked={weekendsVisible} onChange={handleWeekendsToggle}></input> Toggle weekends
-        </label>
-      </div>
-      <div className="demo-app-sidebar-section pr-2 pt-0 pb-0">
-        <h2 className="font-bold">Recent Events</h2>
-        <hr />
-        <List>
-          {allEvents?.slice(0, EVENT_LIST_TOTAL).map(({ title, start, id }, ind) => (
-            <EventItem title={startCase({ word: title })} subTitle={formatDateItem({ time: start })} key={ind} />
-          ))}
-        </List>
-      </div>
-    </div>
+    </LocalizationProvider>
   );
 };
 

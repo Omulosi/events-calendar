@@ -2,11 +2,11 @@ import Event from "@models/event";
 import { connectToDB } from "@utils/database";
 
 export const POST = async (request) => {
-  const { title, description = "", start, end, allDay } = await request.json();
+  const { title, description = "", color = "", start, end, allDay, creator } = await request.json();
 
   try {
     await connectToDB();
-    const newEvent = new Event({ title, description, start, end, allDay });
+    const newEvent = new Event({ title, description, start, end, color, creator, allDay });
     await newEvent.save();
     console.log(" Event successfuly created");
     return new Response(JSON.stringify(newEvent), { status: 201 });

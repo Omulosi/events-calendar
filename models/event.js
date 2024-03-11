@@ -19,6 +19,9 @@ const EventSchema = new Schema({
   end: {
     type: String,
   },
+  color: {
+    type: String,
+  },
   allDay: {
     type: Boolean,
   },

@@ -6,7 +6,7 @@ const AddEventModal = ({ open, setOpen, data, handleChange, handleSubmit, isSubm
       <Dialog.Content style={{ maxWidth: 450 }}>
         <Dialog.Title>Add Event</Dialog.Title>
         <Dialog.Description size="2" mb="4">
-          Add a new event.
+          Add a new event
         </Dialog.Description>
 
         <Flex direction="column" gap="3">
@@ -27,7 +27,7 @@ const AddEventModal = ({ open, setOpen, data, handleChange, handleSubmit, isSubm
         <Flex gap="3" mt="4" justify="end">
           <Dialog.Close>
             <Button variant="soft" color="gray" onClick={() => setOpen(false)}>
-              Cancel
+              Close
             </Button>
           </Dialog.Close>
           <Dialog.Close>
