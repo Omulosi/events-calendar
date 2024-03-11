@@ -1,13 +1,11 @@
 import { Box, Button, Card, Divider, Stack, FormHelperText, TextField } from "@mui/material";
-// !Fix:
 import FlexBetween from "@components/flexbox/FlexBetween";
 import FlexRowAlign from "@components/flexbox/FlexRowAlign";
 import AppTextField from "@components/AppTextField";
+import { CircularProgress } from "@mui/material";
 
 import { H1, H3, Paragraph, Small } from "components/Typography";
 import { useFormik } from "formik";
-import GoogleIcon from "@components/icons/GoogleIcon";
-import { SocialIconButton, TextFieldWrapper } from "@components/StyledComponents";
 import { useState } from "react";
 import * as Yup from "yup";
 import Image from "next/image";
@@ -114,6 +112,7 @@ const LoginModal = () => {
                 variant="contained"
                 size="large"
                 style={{ backgroundColor: "rgb(36, 153, 239)", color: "#fff" }}
+                endIcon={isSubmitting ? <CircularProgress color="inherit" size={25} /> : null}
               >
                 Sign In
               </Button>
