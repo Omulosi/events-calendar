@@ -11,7 +11,7 @@ const AuthenticationLayout = (props) => {
   const downMd = useMediaQuery((theme) => theme.breakpoints.down("md"));
 
   return (
-    <Grid container height="100vh" sx={{ height: "100vh" }}>
+    <Grid container height="100vh" sx={{ height: "100vh", overflow: "hidden" }}>
       <Grid item md={6} xs={12} order={downMd ? 2 : 1}>
         <ContentSlider />
       </Grid>

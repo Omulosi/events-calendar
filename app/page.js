@@ -24,6 +24,7 @@ const Login = () => {
 
   const initialValues = {
     email: "",
+    password: "",
   }; // form field value validation schema
 
   const validationSchema = Yup.object().shape({
@@ -35,8 +36,8 @@ const Login = () => {
     validationSchema,
     onSubmit: (values) => {
       console.log({ values });
-      const { email } = values;
-      signIn("credentials", { email, callbackUrl: `${window.location.origin}/calendar` });
+      const { email, password } = values;
+      signIn("credentials", { email, password, callbackUrl: `${window.location.origin}/calendar` });
       router.push("/");
     },
   });
@@ -44,7 +45,7 @@ const Login = () => {
   return (
     <AuthenticationLayout route="/" description="" title="" routeName="">
       <form onSubmit={handleSubmit}>
-        <Stack gap={2} mt={5}>
+        <Stack gap={2} mt={5} p={2}>
           <AppTextField
             fullWidth
             name="email"
@@ -63,6 +64,18 @@ const Login = () => {
             }}
           />
 
+          <AppTextField
+            fullWidth
+            name="password"
+            type="password"
+            label="Password"
+            onBlur={handleBlur}
+            onChange={handleChange}
+            value={values.password || ""}
+            error={Boolean(touched.password && errors.password)}
+            helperText={touched.password && errors.password}
+          />
+
           <FlexBetween>
             <FlexBox alignItems="center" gap={1}>
               <AppCheckBox defaultChecked />
@@ -75,9 +88,7 @@ const Login = () => {
                 color: "error.main",
                 mb: 2,
               }}
-            >
-              Forget Password
-            </Button>
+            ></Button>
           </FlexBetween>
 
           <Button fullWidth variant="contained" type="submit" size="large">

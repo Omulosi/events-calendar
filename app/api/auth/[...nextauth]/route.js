@@ -72,6 +72,7 @@ const handler = NextAuth({
       try {
         await connectToDB();
         const email = user?.email;
+        const password = user?.password;
 
         // check if user already exists
         const userExists = await User.findOne({ email });
@@ -81,6 +82,7 @@ const handler = NextAuth({
           await User.create({
             email,
             username: email,
+            password,
           });
         }
 
