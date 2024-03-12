@@ -57,9 +57,9 @@ const Login = () => {
         <Card
           sx={{
             padding: 4,
-            maxWidth: 700,
+            maxWidth: 500,
             boxShadow: 1,
-            width: "25%",
+            width: "90%",
             backgroundColor: "#fff",
             border: "1px solid rgba(200,200,200, 0.4)",
           }}
