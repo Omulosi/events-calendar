@@ -1,16 +1,15 @@
-import { Badge, Box, ButtonBase, Divider, styled, useTheme, Modal } from "@mui/material";
+"use client";
+import { Badge, Box, ButtonBase, styled, useTheme } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
-import AppAvatar from "components/AppAvatar";
-import FlexBox from "components/FlexBox";
-import { H6, Small, Tiny } from "components/Typography";
+import AppAvatar from "@components/AppAvatar";
+import FlexBox from "@components/flexbox/FlexBox";
+import { H6, Small, Tiny } from "@components/Typography";
 import { useRef, useState } from "react";
 // import toast from "react-hot-toast";
 // import { useNavigate } from "react-router-dom";
 import PopoverLayout from "./PopoverLayout";
 import { H2 } from "./Typography";
 import { signOut, useSession } from "next-auth/react";
-import Link from "next/link";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useMediaQuery } from "@mui/material";
 
@@ -43,13 +42,13 @@ const NavBar = () => {
   const user = session?.user;
 
   return (
-    <Box sx={{ padding: 2, display: "flex", width: "100%", alignItems: "center", justifyContent: "flex-end" }}>
-      <Box sx={{ flex: 1 }}>
-        <Link href="/" className="flex gap-2 flex-center">
-          <Image src="/assets/images/logo.jpg" alt="logo" width={50} height={50} className="object-contain" />
-          <H2 className="logo_text">{!downXl && "  Events Calendar"}</H2>
-        </Link>
-      </Box>
+    <Box sx={{ display: "flex", width: "100%", alignItems: "center", justifyContent: "flex-end", background: "#fff" }}>
+      <FlexBox sx={{ flex: 1, alignItems: "center" }}>
+        <Box width={75}>
+          <img src="/assets/images/logo.jpg" alt="logo" width="100%" />
+        </Box>
+        <H2 className="logo_text">{!downXl && "  Events Calendar"}</H2>
+      </FlexBox>
       <div>
         {session ? (
           <StyledButtonBase disableRipple ref={anchorRef} onClick={() => setOpen(true)}>
@@ -87,21 +86,7 @@ const NavBar = () => {
               />
             </Badge>
           </StyledButtonBase>
-        ) : (
-          <Box
-            mr={2}
-            sx={{
-              cursor: "pointer",
-              padding: 1,
-              "&:hover": {
-                backgroundColor: theme.palette.action.hover,
-              },
-            }}
-            onClick={() => router.push("/")}
-          >
-            <span>Sign in</span>
-          </Box>
-        )}
+        ) : null}
 
         <PopoverLayout
           hiddenViewButton
@@ -113,7 +98,7 @@ const NavBar = () => {
           title={
             <FlexBox alignItems="center" gap={1}>
               <AppAvatar
-                src={"/static/avatar/001-man.svg"}
+                src={"/assets/images/001-man.svg"}
                 sx={{
                   width: 35,
                   height: 35,
@@ -121,7 +106,6 @@ const NavBar = () => {
               />
 
               <Box>
-                <H6>{user?.name || ""}</H6>
                 <Tiny display="block" fontWeight={500} color="text.disabled">
                   {user?.email || ""}
                 </Tiny>

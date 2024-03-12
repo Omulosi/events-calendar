@@ -1,3 +1,4 @@
+"use client";
 import { Box, ButtonBase, Divider, Popover } from "@mui/material";
 import { H4 } from "components/Typography";
 import React from "react";
@@ -22,9 +23,7 @@ const PopoverLayout = (props) => {
         },
       }}
     >
-      <H4 fontWeight="700" p={2}>
-        {title}
-      </H4>
+      <Box p={1}>{title}</Box>
       <Divider />
 
       {children}

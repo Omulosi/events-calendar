@@ -21,27 +21,36 @@ const SideBar = ({ weekendsVisible, handleWeekendsToggle, allEvents }) => {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <div className="demo-app-sidebar">
-        <Box>
-          <BasicCalendar />
-        </Box>
+      <Box
+        sx={{
+          width: "300px",
+          lineHeight: 1.5,
+          background: "#fff",
+          borderRight: "1px solid #d3e2e8",
+        }}
+      >
+        <BasicCalendar />
 
-        <div className="demo-app-sidebar-section">
+        <Box pl={3}>
           <label>
             <input type="checkbox" checked={weekendsVisible} onChange={handleWeekendsToggle}></input> Toggle weekends
           </label>
-        </div>
+        </Box>
 
-        <div className="demo-app-sidebar-section">
-          <H6 sx={{ textTransform: "uppercase" }}>Todays Events</H6>
+        <Box pl={3}>
+          <span
+            style={{ textTransform: "uppercase", paddingTop: "1.5em", fontWeight: "bold", display: "inline-block" }}
+          >
+            Today's Events
+          </span>
           <Divider />
           <Box>
             {todaysEvents.map((item) => (
               <ListCard item={item} handleMore={handleMoreOpen} />
             ))}
           </Box>
-        </div>
-      </div>
+        </Box>
+      </Box>
     </LocalizationProvider>
   );
 };

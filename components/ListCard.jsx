@@ -1,6 +1,6 @@
 import { MoreHoriz } from "@mui/icons-material";
 import { Box, IconButton } from "@mui/material";
-import FlexBox from "@components/FlexBox";
+import FlexBox from "@components/flexbox/FlexBox";
 import { Small } from "@components/Typography";
 
 const ListCard = ({ item, handleMore }) => {

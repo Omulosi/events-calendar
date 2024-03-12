@@ -1,9 +1,11 @@
 "use client";
 
-import React from "react";
 import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "@mui/material";
 import { createCustomTheme } from "@theme";
+
+import "pure-react-carousel/dist/react-carousel.es.css";
+import "simplebar-react/dist/simplebar.min.css";
 
 const settings = {
   theme: "light",

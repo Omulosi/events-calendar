@@ -22,7 +22,9 @@ import { startCase } from "@utils/helpers";
 import { Button } from "@radix-ui/themes";
 import { useSWRConfig } from "swr";
 import NavBar from "@components/NavBar";
-import { Box, Divider, useMediaQuery } from "@mui/material";
+import { Box, Divider, useMediaQuery, Card } from "@mui/material";
+import AddEventForm from "@components/AddEventForm";
+import AppModal from "@components/AppModal";
 // import { useLayoutEffect } from "react";
 // import { redirect } from "next/navigation";
 
@@ -39,68 +41,14 @@ const EventCalendar = () => {
   const [currentEvent, setCurrentEvent] = useState(null);
   const [openCurrentEventModal, setOpenCurrentEventModal] = useState(false);
 
+  const handleCloseAddEventModal = () => setOpenAddEventModal(false);
+
   const { mutate } = useSWRConfig();
 
   const router = useRouter();
 
   // Todo: Pass month - get all events for current month by default.
   const { allEvents } = useAllEvents({ session });
-
-  const initialValues = {
-    title: "",
-    description: "",
-  };
-
-  const validationSchema = Yup.object({
-    title: Yup.string().required(),
-    description: Yup.string(),
-  });
-
-  const { values, errors, handleSubmit, handleChange, handleBlur, touched, setFieldValue } = useFormik({
-    initialValues,
-    validationSchema,
-    onSubmit: async (values, { resetForm, setSubmitting }) => {
-      try {
-        let calendarApi = eventDetails.view.calendar;
-        calendarApi.unselect(); // clear date selection
-
-        const newEvent = {
-          id: uuidv4(),
-          title: values.title,
-          description: values.description,
-          start: eventDetails.startStr,
-          end: eventDetails.endStr,
-          allDay: eventDetails.allDay,
-          userId: session?.user.id,
-        };
-
-        calendarApi.addEvent(newEvent);
-
-        const response = await fetch("/api/event/new", {
-          method: "POST",
-          body: JSON.stringify({
-            title: newEvent.title,
-            description: newEvent.description,
-            start: newEvent.start,
-            end: newEvent.end,
-            allDay: newEvent.allDay,
-            userId: session?.user.id,
-          }),
-        });
-
-        if (response.ok) {
-          // Close modal
-          router.push("/");
-          mutate("/api/event");
-          setOpenAddEventModal(false);
-        }
-      } catch (error) {
-        console.log({ error });
-      } finally {
-        setSubmitting(false);
-      }
-    },
-  });
 
   const handleWeekendsToggle = () => {
     setWeekendsVisible((prev) => !prev);
@@ -127,110 +75,81 @@ const EventCalendar = () => {
     // Show event
   };
 
-  const handleEditEvent = ({ event }) => {};
-
   return (
     <Box>
       <NavBar />
 
       <Divider />
 
-      <div className="app">
-        <AddEventModal
-          open={openAddEventModal}
-          setOpen={setOpenAddEventModal}
-          data={values}
-          handleChange={handleChange}
-          handleSubmit={handleSubmit}
-          key={eventDetails}
-        />
+      <Card>
+        <Box
+          sx={{
+            display: "flex",
+            minHeight: "100%",
+            fontSize: "13px",
+            backgroundColor: "rgb(243, 244, 249)",
+          }}
+        >
+          {/**  Add Event Modal */}
 
-        {/** Show details of currently selected event */}
-        <Drawer isOpen={openCurrentEventModal} setIsOpen={setOpenCurrentEventModal} data={currentEvent} title="">
-          <List>
-            {currentEvent?.length > 0 &&
-              Object.entries(currentEvent[0]).map(([key, value]) => {
-                if (!value || key.toLocaleLowerCase().includes("id") || key.toLowerCase().includes("_")) {
-                  return null;
-                }
-                if (!(typeof value === "string")) {
-                  return null;
-                }
+          <AppModal open={openAddEventModal} handleClose={handleCloseAddEventModal}>
+            <AddEventForm handleCancel={handleCloseAddEventModal} eventDetails={eventDetails} />
+          </AppModal>
 
-                if (key?.toLowerCase().includes("color")) {
-                  return null;
-                }
-                return <EventItem title={startCase({ word: key })} subTitle={startCase({ word: value })} key={key} />;
-              })}
-          </List>
-          <div className="p-4 flex justify-start gap-3">
-            <Button
-              variant="outline"
-              color="gray"
-              onClick={() => {
-                /** Edit */
+          {/** LH Side bar showing a list of events */}
+          {!downXl && (
+            <SideBar
+              allEvents={allEvents}
+              weekendsVisible={weekendsVisible}
+              handleWeekendsToggle={handleWeekendsToggle}
+            />
+          )}
+
+          <Box
+            sx={{
+              flexGrow: 1,
+              padding: "3em",
+            }}
+          >
+            <FullCalendar
+              plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+              headerToolbar={{
+                left: downXl ? null : "prev,next today",
+                center: "title",
+                right: "dayGridMonth,timeGridWeek,timeGridDay",
               }}
-            >
-              Edit
-            </Button>
-            <Button color="tomato" variant="solid">
-              Delete
-            </Button>
-          </div>
-        </Drawer>
-
-        {/** LH Side bar showing a list of events */}
-        {!downXl && (
-          <SideBar
-            allEvents={allEvents}
-            weekendsVisible={weekendsVisible}
-            handleWeekendsToggle={handleWeekendsToggle}
-          />
-        )}
-
-        <div className="demo-app-main">
-          <FullCalendar
-            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-            headerToolbar={{
-              left: downXl ? null : "prev,next today",
-              center: "title",
-              right: "dayGridMonth,timeGridWeek,timeGridDay",
-            }}
-            initialView="dayGridMonth"
-            editable={true}
-            selectable={true}
-            selectMirror={true}
-            dayMaxEvents={true}
-            weekends={weekendsVisible}
-            events={allEvents}
-            initialEvents={allEvents} // alternatively, use the `events` setting to fetch from a feed
-            select={handleDateSelect}
-            eventContent={(event) => <EventContent eventInfo={event} />} // custom render function
-            eventClick={handleEventClick}
-            eventAdd={({ event }) => {
-              console.log("Event Added");
-              mutate("/api/event");
-            }}
-            eventChange={function ({ event }) {
-              console.log("Event changed");
-              const changedEvent = {
-                id: event.id,
-                start: event.start,
-                end: event.end,
-                startStr: event.startStr,
-                endStr: event.endStr,
-                title: event.title,
-                allDay: event.allDay,
-              };
-              console.log({ changedEvent });
-            }}
-            eventRemove={function ({ event }) {
-              console.log("Event removed");
-              const eventId = event.id;
-            }}
-          />
-        </div>
-      </div>
+              initialView="dayGridMonth"
+              editable={true}
+              selectable={true}
+              selectMirror={true}
+              dayMaxEvents={true}
+              weekends={weekendsVisible}
+              events={allEvents}
+              initialEvents={allEvents} // alternatively, use the `events` setting to fetch from a feed
+              select={handleDateSelect}
+              eventContent={(event) => <EventContent eventInfo={event} />} // custom render function
+              eventClick={handleEventClick}
+              eventChange={function ({ event }) {
+                console.log("Event changed");
+                const changedEvent = {
+                  id: event.id,
+                  start: event.start,
+                  end: event.end,
+                  startStr: event.startStr,
+                  endStr: event.endStr,
+                  title: event.title,
+                  allDay: event.allDay,
+                };
+                console.log({ changedEvent });
+              }}
+              eventRemove={function ({ event }) {
+                console.log("Event removed");
+                const eventId = event.id;
+              }}
+            />
+          </Box>
+        </Box>
+      </Card>
     </Box>
   );
 };

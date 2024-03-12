@@ -1,3 +1,4 @@
+"use client";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import React from "react";
 

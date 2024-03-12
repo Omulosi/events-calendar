@@ -2,8 +2,13 @@
 import { Box, Button, Card, Divider, Stack, FormHelperText, TextField } from "@mui/material";
 import FlexBetween from "@components/flexbox/FlexBetween";
 import FlexRowAlign from "@components/flexbox/FlexRowAlign";
+import AppCheckBox from "@components/AppCheckBox";
+import FlexBox from "@components/flexbox/FlexBox";
+import { Small } from "@components/Typography";
+import AuthenticationLayout from "@components/AuthenticationLayout";
 import { CircularProgress } from "@mui/material";
 import { H1 } from "components/Typography";
+import AppTextField from "@components/AppTextField";
 import { useFormik } from "formik";
 import { useState } from "react";
 import * as Yup from "yup";
@@ -35,6 +40,54 @@ const Login = () => {
       router.push("/");
     },
   });
+
+  return (
+    <AuthenticationLayout route="/" description="" title="" routeName="">
+      <form onSubmit={handleSubmit}>
+        <Stack gap={2} mt={5}>
+          <AppTextField
+            fullWidth
+            name="email"
+            type="email"
+            label="Email"
+            size="medium"
+            onBlur={handleBlur}
+            onChange={handleChange}
+            value={values.email || ""}
+            error={Boolean(touched.email && errors.email)}
+            helperText={touched.email && errors.email}
+            sx={{
+              mb: {
+                xs: 1,
+              },
+            }}
+          />
+
+          <FlexBetween>
+            <FlexBox alignItems="center" gap={1}>
+              <AppCheckBox defaultChecked />
+              <Small fontSize={12}>Remember me</Small>
+            </FlexBox>
+
+            <Button
+              disableRipple
+              sx={{
+                color: "error.main",
+                mb: 2,
+              }}
+            >
+              Forget Password
+            </Button>
+          </FlexBetween>
+
+          <Button fullWidth variant="contained" type="submit" size="large">
+            {isSubmitting ? "Loading..." : "Sign In"}
+          </Button>
+        </Stack>
+      </form>
+    </AuthenticationLayout>
+  );
+
   return (
     <Box
       sx={{

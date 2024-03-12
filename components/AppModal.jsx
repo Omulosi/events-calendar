@@ -8,6 +8,8 @@ const Wrapper = styled(Box)(({ theme }) => ({
   width: "100%",
   borderRadius: "4px",
   position: "absolute",
+  background: "white",
+  border: "none",
   transform: "translate(-50%, -50%)",
 }));
 
