@@ -95,7 +95,7 @@ const NavBar = () => {
                 backgroundColor: theme.palette.action.hover,
               },
             }}
-            onClick={() => router.push("/login")}
+            onClick={() => router.push("/")}
           >
             <span>Sign in</span>
           </Box>
@@ -139,7 +139,7 @@ const NavBar = () => {
               },
             }}
             onClick={() => {
-              signOut({ callbackUrl: `${window.location.origin}/login` });
+              signOut({ callbackUrl: `${window.location.origin}/` });
             }}
           >
             <LogoutIcon
