@@ -12,6 +12,7 @@ import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useMediaQuery } from "@mui/material";
 
 const StyledButtonBase = styled(ButtonBase)(({ theme }) => ({
   padding: 5,
@@ -31,6 +32,7 @@ const StyledSmall = styled(Small)(({ theme }) => ({
 
 const NavBar = () => {
   const theme = useTheme();
+  const downXl = useMediaQuery((theme) => theme.breakpoints.down("md"));
   const anchorRef = useRef(null);
   const [open, setOpen] = useState(false);
 
@@ -45,7 +47,7 @@ const NavBar = () => {
       <Box sx={{ flex: 1 }}>
         <Link href="/" className="flex gap-2 flex-center">
           <Image src="/assets/images/logo.jpg" alt="logo" width={50} height={50} className="object-contain" />
-          <H2 className="logo_text">Events Calendar</H2>
+          <H2 className="logo_text">{!downXl && "  Events Calendar"}</H2>
         </Link>
       </Box>
       <div>

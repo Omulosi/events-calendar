@@ -22,20 +22,16 @@ import { startCase } from "@utils/helpers";
 import { Button } from "@radix-ui/themes";
 import { useSWRConfig } from "swr";
 import NavBar from "@components/NavBar";
-import { Box, Divider } from "@mui/material";
+import { Box, Divider, useMediaQuery } from "@mui/material";
 // import { useLayoutEffect } from "react";
 // import { redirect } from "next/navigation";
 
 const EventCalendar = () => {
   const { data: session } = useSession();
 
-  // console.log({ session });
+  const downXl = useMediaQuery((theme) => theme.breakpoints.down("lg"));
 
-  // useLayoutEffect(() => {
-  //   if (!session) {
-  //     redirect("/login");
-  //   }
-  // }, [session]);
+  console.log({ downXl });
 
   const [weekendsVisible, setWeekendsVisible] = useState(true);
   const [openAddEventModal, setOpenAddEventModal] = useState(false);
@@ -91,8 +87,6 @@ const EventCalendar = () => {
             userId: session?.user.id,
           }),
         });
-
-        console.log({ response });
 
         if (response.ok) {
           // Close modal
@@ -186,13 +180,19 @@ const EventCalendar = () => {
         </Drawer>
 
         {/** LH Side bar showing a list of events */}
-        <SideBar allEvents={allEvents} weekendsVisible={weekendsVisible} handleWeekendsToggle={handleWeekendsToggle} />
+        {!downXl && (
+          <SideBar
+            allEvents={allEvents}
+            weekendsVisible={weekendsVisible}
+            handleWeekendsToggle={handleWeekendsToggle}
+          />
+        )}
 
         <div className="demo-app-main">
           <FullCalendar
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
             headerToolbar={{
-              left: "prev,next today",
+              left: downXl ? null : "prev,next today",
               center: "title",
               right: "dayGridMonth,timeGridWeek,timeGridDay",
             }}
