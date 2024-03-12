@@ -5,7 +5,8 @@ import useSwr from "swr";
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
 const useAllEvents = (params) => {
-  const { data, isLoading, error, mutate } = useSwr("/api/event", fetcher);
+  const userId = params?.session?.user?.id;
+  const { data, isLoading, error, mutate } = useSwr(`/api/event?user=${userId}`, fetcher);
   console.log({ data });
   let eventList = data?.map((event) => {
     const randomColor = Math.floor(Math.random() * 16777215).toString(16);

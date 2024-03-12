@@ -3,30 +3,15 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import AppAvatar from "components/AppAvatar";
 import FlexBox from "components/FlexBox";
 import { H6, Small, Tiny } from "components/Typography";
-import { Fragment, useRef, useState } from "react";
+import { useRef, useState } from "react";
 // import toast from "react-hot-toast";
 // import { useNavigate } from "react-router-dom";
 import PopoverLayout from "./PopoverLayout";
 import { H2 } from "./Typography";
 import { signOut, useSession } from "next-auth/react";
-import AppModal from "@components/AppModal";
-import LoginModal from "@components/LoginModal";
-import Login from "@components/Login";
 import Link from "next/link";
 import Image from "next/image";
-
-import { Button } from "@components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@components/ui/dialog";
-import { Input } from "@components/ui/input";
-import { Label } from "@components/ui/label";
+import { useRouter } from "next/navigation";
 
 const StyledButtonBase = styled(ButtonBase)(({ theme }) => ({
   padding: 5,
@@ -48,19 +33,15 @@ const NavBar = () => {
   const theme = useTheme();
   const anchorRef = useRef(null);
   const [open, setOpen] = useState(false);
-  const [openModal, setOpenModal] = useState(false);
+
+  const router = useRouter();
 
   const { data: session, status } = useSession();
-
-  console.log({ session });
 
   const user = session?.user;
 
   return (
     <Box sx={{ padding: 2, display: "flex", width: "100%", alignItems: "center", justifyContent: "flex-end" }}>
-      <Modal open={openModal} handleClose={() => setOpenModal(false)}>
-        <LoginModal />
-      </Modal>
       <Box sx={{ flex: 1 }}>
         <Link href="/" className="flex gap-2 flex-center">
           <Image src="/assets/images/logo.jpg" alt="logo" width={50} height={50} className="object-contain" />
@@ -114,7 +95,7 @@ const NavBar = () => {
                 backgroundColor: theme.palette.action.hover,
               },
             }}
-            onClick={() => setOpenModal(true)}
+            onClick={() => router.push("/login")}
           >
             <span>Sign in</span>
           </Box>
@@ -158,7 +139,7 @@ const NavBar = () => {
               },
             }}
             onClick={() => {
-              signOut();
+              signOut({ callbackUrl: `${window.location.origin}/login` });
             }}
           >
             <LogoutIcon

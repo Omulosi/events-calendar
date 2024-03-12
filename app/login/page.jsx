@@ -2,16 +2,24 @@
 import { Box, Button, Card, Divider, Stack, FormHelperText, TextField } from "@mui/material";
 import FlexBetween from "@components/flexbox/FlexBetween";
 import FlexRowAlign from "@components/flexbox/FlexRowAlign";
+import AppTextField from "@components/AppTextField";
 import { CircularProgress } from "@mui/material";
-import { H1 } from "components/Typography";
+import { alpha, useTheme } from "@mui/material/styles";
+
+import { H1, H3, Paragraph, Small } from "components/Typography";
 import { useFormik } from "formik";
 import { useState } from "react";
 import * as Yup from "yup";
 import Image from "next/image";
+import { redirect } from "next/navigation";
+
+import { bgGradient } from "@theme/css";
+
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 const Login = () => {
+  const theme = useTheme();
   const [error, setError] = useState("");
   // const [loading, setLoading] = useState(false);
 
@@ -31,7 +39,7 @@ const Login = () => {
     onSubmit: (values) => {
       console.log({ values });
       const { email } = values;
-      signIn("credentials", { email, callbackUrl: `${window.location.origin}/calendar` });
+      signIn("credentials", { email, callbackUrl: `${window.location.origin}/` });
       router.push("/");
     },
   });
@@ -41,6 +49,7 @@ const Login = () => {
         margin: 0,
         padding: 0,
         height: "100vh",
+        backgroundColor: "#eee",
       }}
     >
       <Box width={60} mt={1} sx={{ cursor: "pointer" }}>
@@ -60,8 +69,6 @@ const Login = () => {
             maxWidth: 700,
             boxShadow: 1,
             width: "25%",
-            backgroundColor: "#fff",
-            border: "1px solid rgba(200,200,200, 0.4)",
           }}
         >
           <FlexRowAlign flexDirection="column" mb={5}>
