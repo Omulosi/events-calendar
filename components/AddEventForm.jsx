@@ -44,11 +44,13 @@ const AddEventForm = ({ handleCancel, eventDetails }) => {
           id: uuidv4(),
           title: values.title,
           description: values.description,
-          start: eventDetails.startStr,
-          end: eventDetails.endStr,
+          start: eventDetails?.startStr ?? eventDetails?.dateStr ?? "",
+          end: eventDetails?.endStr ?? eventDetails?.dateStr ?? "",
           allDay: eventDetails.allDay,
           userId: session?.user.id,
         };
+
+        console.log({ newEvent, values, eventDetails });
 
         calendarApi.addEvent(newEvent);
 
