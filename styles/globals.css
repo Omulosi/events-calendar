@@ -44,11 +44,11 @@ body {
 
 /* Date calendar */
 .MuiDateCalendar-root {
-  width: 240px;
-  padding: 0;
-  margin: 0;
-  height: 240px;
-  max-height: 280px;
+  width: 240px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  height: 240px !important;
+  max-height: 280px !important;
 }
 
 .MuiPickersCalendarHeader-root {
