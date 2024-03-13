@@ -52,36 +52,36 @@ body {
 }
 
 .MuiPickersCalendarHeader-root {
-  height: 32px;
+  height: 32px !important;
 }
 
 .MuiPickersCalendarHeader-labelContainer {
-  font-size: 14px;
-  font-weight: 600;
-  letter-spacing: 0.25px;
-  line-height: 20px;
-  color: rgb(60, 64, 67);
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.25px !important;
+  line-height: 20px !important;
+  color: rgb(60, 64, 67) !important;
 }
 
 .MuiDayCalendar-root * {
-  font-size: 12px;
+  font-size: 12px !important;
 }
 
 .MuiDayCalendar-header * {
-  height: 24px;
-  font-size: 10px;
+  height: 24px !important;
+  font-size: 10px !important;
 }
 
 .MuiDayCalendar-weekContainer {
-  height: 32px;
+  height: 32px !important;
 }
 
 .MuiPickersDay-root {
-  width: 32px;
-  height: 32px;
+  width: 32px !important;
+  height: 32px !important;
 }
 
 .MuiPickersArrowSwitcher-root * {
-  font-size: 1.2rem;
-  font-weight: 500;
+  font-size: 1.2rem !important;
+  font-weight: 500 !important;
 }
