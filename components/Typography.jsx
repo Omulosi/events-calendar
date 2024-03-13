@@ -155,6 +155,7 @@ export const Small = (props) => {
     </StyledBox>
   );
 };
+
 export const Span = (props) => {
   const { ellipsis, children, className, ...others } = props;
   return (
@@ -171,6 +172,7 @@ export const Span = (props) => {
     </StyledBox>
   );
 };
+
 export const Tiny = (props) => {
   const { ellipsis, children, className, ...others } = props;
   return (

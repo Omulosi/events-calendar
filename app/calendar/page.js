@@ -16,6 +16,7 @@ import NavBar from "@components/NavBar";
 import { Box, Divider, useMediaQuery, Card } from "@mui/material";
 import AddEventForm from "@components/AddEventForm";
 import AppModal from "@components/AppModal";
+import EventDetailForm from "@components/EventDetailForm";
 // import { useLayoutEffect } from "react";
 // import { redirect } from "next/navigation";
 
@@ -24,23 +25,25 @@ const EventCalendar = () => {
 
   const downXl = useMediaQuery((theme) => theme.breakpoints.down("lg"));
 
-  console.log({ downXl });
-
   const [weekendsVisible, setWeekendsVisible] = useState(true);
-  const [openAddEventModal, setOpenAddEventModal] = useState(true);
+  const [openAddEventModal, setOpenAddEventModal] = useState(false);
   const [eventDetails, setEventDetails] = useState(null);
   const [currentEvent, setCurrentEvent] = useState(null);
+  const [currentEventId, setCurrentEventId] = useState(null);
   const [openCurrentEventModal, setOpenCurrentEventModal] = useState(false);
 
   const handleCloseAddEventModal = () => setOpenAddEventModal(false);
 
+  const currentMonth = new Date().getMonth();
+
   // Todo: Pass month - get all events for current month by default.
-  const { allEvents } = useAllEvents({ session });
+  const { allEvents } = useAllEvents({ session, month: currentMonth });
 
   const handleWeekendsToggle = () => {
     setWeekendsVisible((prev) => !prev);
   };
 
+  // On click date box to add an event.
   const handleDateSelect = (selectInfo) => {
     setOpenAddEventModal(true);
     setEventDetails(selectInfo);
@@ -54,10 +57,10 @@ const EventCalendar = () => {
   };
 
   const handleEventClick = ({ event }) => {
+    console.log("-----------------------  event clicked ------------------");
     const eventId = event.id;
-    // Todo: Get event from server
-    const currentEvent = allEvents.filter((event) => event?.id === eventId);
-    setCurrentEvent(currentEvent);
+    console.log(eventId);
+    setCurrentEventId(eventId);
     setOpenCurrentEventModal(true);
     // Show event
   };
@@ -80,6 +83,15 @@ const EventCalendar = () => {
           {/**  Add Event Modal  */}
           <AppModal open={openAddEventModal} handleClose={handleCloseAddEventModal}>
             <AddEventForm handleCancel={handleCloseAddEventModal} eventDetails={eventDetails} />
+          </AppModal>
+
+          {/**  View/Edit Event Modal  */}
+          <AppModal open={openCurrentEventModal} handleClose={() => setOpenCurrentEventModal(false)}>
+            <EventDetailForm
+              handleCancel={() => setOpenCurrentEventModal(false)}
+              data={eventDetails}
+              eventId={currentEventId}
+            />
           </AppModal>
 
           {/** LH Side bar showing a list of events */}
@@ -116,7 +128,7 @@ const EventCalendar = () => {
               eventContent={(event) => <EventContent eventInfo={event} />} // custom render function
               eventClick={handleEventClick}
               eventChange={function ({ event }) {
-                console.log("Event changed");
+                console.log("============================  Event changed =================");
                 const changedEvent = {
                   id: event.id,
                   start: event.start,

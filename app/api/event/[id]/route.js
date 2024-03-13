@@ -4,12 +4,14 @@ import { connectToDB } from "@utils/database";
 export const GET = async (request, { params }) => {
   try {
     await connectToDB();
+    const id = params?.id;
+    const data = await Event.findById(id);
 
-    const Event = await Event.findById(params.id).populate("creator");
-    if (!Event) return new Response("Event Not Found", { status: 404 });
+    if (!data) return new Response("Event Not Found", { status: 404 });
 
-    return new Response(JSON.stringify(Event), { status: 200 });
+    return new Response(JSON.stringify(data), { status: 200 });
   } catch (error) {
+    console.log({ eventError: error });
     return new Response("Internal Server Error", { status: 500 });
   }
 };
@@ -21,6 +23,9 @@ export const PATCH = async (request, { params }) => {
     await connectToDB();
 
     const existingEvent = await Event.findById(params.id);
+
+    console.log({ existingEvent });
+    console.log({ data: request.json() });
 
     if (!existingEvent) {
       return new Response("Event not found", { status: 404 });
