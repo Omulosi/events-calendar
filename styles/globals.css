@@ -22,7 +22,16 @@ body {
   background-color: #fff !important;
   padding: 1em;
   border-radius: 10px;
+  color: rgb(60, 64, 67) !important;
 }
+
+.fc a {
+  color: rgb(60, 64, 67);
+}
+
+/* .fc td {
+  height: 8rem !important;
+} */
 
 .fc-button {
   background-color: white !important;

@@ -3,6 +3,7 @@
 import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "@mui/material";
 import { createCustomTheme } from "@theme";
+import { CssBaseline } from "@mui/material";
 
 import "pure-react-carousel/dist/react-carousel.es.css";
 import "simplebar-react/dist/simplebar.min.css";
@@ -20,7 +21,10 @@ const Provider = ({ children, session }) => {
 
   return (
     <SessionProvider session={session}>
-      <ThemeProvider theme={theme}>{children}</ThemeProvider>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        {children}
+      </ThemeProvider>
     </SessionProvider>
   );
 };

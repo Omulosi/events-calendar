@@ -42,7 +42,17 @@ const NavBar = () => {
   const user = session?.user;
 
   return (
-    <Box sx={{ display: "flex", width: "100%", alignItems: "center", justifyContent: "flex-end", background: "#fff" }}>
+    <Box
+      sx={{
+        display: "flex",
+        width: "100%",
+        alignItems: "center",
+        justifyContent: "flex-end",
+        background: "#fff",
+        height: "7vh",
+        minHeight: "7vh",
+      }}
+    >
       <FlexBox sx={{ flex: 1, alignItems: "center" }}>
         <Box width={75}>
           <img src="/assets/images/logo.jpg" alt="logo" width="100%" />

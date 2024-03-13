@@ -180,7 +180,6 @@ export const Tiny = (props) => {
       component="p"
       fontSize={13}
       fontWeight={500}
-      lineHeight={1.65}
       ellipsis={ellipsis}
       color="text.secondary"
       className={clsx({

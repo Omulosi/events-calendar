@@ -7,6 +7,7 @@ import { Box, Divider, Grid, Stack } from "@mui/material";
 import { H6 } from "@components/Typography";
 import ListCard from "./ListCard";
 import dayjs from "dayjs";
+import ListDisplay from "@components/ListDisplay";
 
 const SideBar = ({ weekendsVisible, handleWeekendsToggle, allEvents }) => {
   const now = new Date();
@@ -26,6 +27,7 @@ const SideBar = ({ weekendsVisible, handleWeekendsToggle, allEvents }) => {
           width: "300px",
           background: "#fff",
           borderRight: "1px solid #d3e2e8",
+          height: "92.5vh",
         }}
       >
         <BasicCalendar showDaysOutsideCurrentMonth />
@@ -41,11 +43,7 @@ const SideBar = ({ weekendsVisible, handleWeekendsToggle, allEvents }) => {
             Today's Events
           </span>
           <Divider />
-          <Box>
-            {todaysEvents.map((item) => (
-              <ListCard item={item} handleMore={handleMoreOpen} />
-            ))}
-          </Box>
+          <ListDisplay items={todaysEvents} />
         </Box>
       </Stack>
     </LocalizationProvider>
@@ -53,3 +51,9 @@ const SideBar = ({ weekendsVisible, handleWeekendsToggle, allEvents }) => {
 };
 
 export default SideBar;
+
+// <Box>
+//             {todaysEvents.map((item) => (
+//               <ListCard item={item} handleMore={handleMoreOpen} />
+//             ))}
+//           </Box>

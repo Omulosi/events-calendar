@@ -45,7 +45,7 @@ const ContentSlider = () => {
       totalSlides={1}
       naturalSlideWidth={100}
       naturalSlideHeight={125}
-      currentSlide={1}
+      currentSlide={0}
       isIntrinsicHeight
       dragEnabled={false}
     >
