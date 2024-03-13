@@ -13,6 +13,7 @@ body {
   background-color: rgb(243, 244, 249);
 }
 
+/* Full Calendar */
 .fc {
   /* the calendar root */
   max-width: "100%";
@@ -30,4 +31,48 @@ body {
   text-transform: capitalize !important;
   cursor: pointer !important;
   font-weight: bolder !important;
+}
+
+/* Date calendar */
+.MuiDateCalendar-root {
+  width: 240px;
+  padding: 0;
+  margin: 0;
+  height: 240px;
+  max-height: 280px;
+}
+
+.MuiPickersCalendarHeader-root {
+  height: 32px;
+}
+
+.MuiPickersCalendarHeader-labelContainer {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.25px;
+  line-height: 20px;
+  color: rgb(60, 64, 67);
+}
+
+.MuiDayCalendar-root * {
+  font-size: 12px;
+}
+
+.MuiDayCalendar-header * {
+  height: 24px;
+  font-size: 10px;
+}
+
+.MuiDayCalendar-weekContainer {
+  height: 32px;
+}
+
+.MuiPickersDay-root {
+  width: 32px;
+  height: 32px;
+}
+
+.MuiPickersArrowSwitcher-root * {
+  font-size: 1.2rem;
+  font-weight: 500;
 }

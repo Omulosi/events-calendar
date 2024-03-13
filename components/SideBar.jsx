@@ -3,15 +3,13 @@ import { formatDateItem, startCase } from "@utils/helpers";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import BasicCalendar from "./BasicCalendar";
-import { Box, Divider, Grid } from "@mui/material";
+import { Box, Divider, Grid, Stack } from "@mui/material";
 import { H6 } from "@components/Typography";
 import ListCard from "./ListCard";
-import { useState } from "react";
+import dayjs from "dayjs";
 
 const SideBar = ({ weekendsVisible, handleWeekendsToggle, allEvents }) => {
   const now = new Date();
-
-  console.log({ allEvents });
 
   const todaysEvents = allEvents?.filter(
     (event) => new Date(event.start).toLocaleDateString() === now.toLocaleDateString()
@@ -21,26 +19,25 @@ const SideBar = ({ weekendsVisible, handleWeekendsToggle, allEvents }) => {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Box
+      <Stack
+        spacing={3}
+        pl={2}
         sx={{
           width: "300px",
-          lineHeight: 1.5,
           background: "#fff",
           borderRight: "1px solid #d3e2e8",
         }}
       >
-        <BasicCalendar />
+        <BasicCalendar showDaysOutsideCurrentMonth />
 
-        <Box pl={3}>
+        <Box>
           <label>
-            <input type="checkbox" checked={weekendsVisible} onChange={handleWeekendsToggle}></input> Toggle weekends
+            <input type="checkbox" checked={weekendsVisible} onChange={handleWeekendsToggle} /> Toggle Weekends
           </label>
         </Box>
 
-        <Box pl={3}>
-          <span
-            style={{ textTransform: "uppercase", paddingTop: "1.5em", fontWeight: "bold", display: "inline-block" }}
-          >
+        <Box>
+          <span style={{ textTransform: "uppercase", fontWeight: "bold", display: "inline-block", fontSize: "0.7rem" }}>
             Today's Events
           </span>
           <Divider />
@@ -50,7 +47,7 @@ const SideBar = ({ weekendsVisible, handleWeekendsToggle, allEvents }) => {
             ))}
           </Box>
         </Box>
-      </Box>
+      </Stack>
     </LocalizationProvider>
   );
 };

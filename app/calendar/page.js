@@ -7,19 +7,10 @@ import interactionPlugin from "@fullcalendar/interaction";
 import { useState, useEffect } from "react";
 import EventContent from "@components/EventContent";
 import SideBar from "@components/SideBar";
-import { v4 as uuidv4 } from "uuid";
-import AddEventModal from "@components/AddEventModal";
-import * as Yup from "yup";
-import { useFormik } from "formik";
-import Drawer from "@components/Drawer";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import useAllEvents from "@hooks/useAllEvents";
 import useEvent from "@hooks/useEvent";
-import List from "@components/List";
-import EventItem from "@components/EventItem";
-import { startCase } from "@utils/helpers";
-import { Button } from "@radix-ui/themes";
 import { useSWRConfig } from "swr";
 import NavBar from "@components/NavBar";
 import { Box, Divider, useMediaQuery, Card } from "@mui/material";
@@ -42,10 +33,6 @@ const EventCalendar = () => {
   const [openCurrentEventModal, setOpenCurrentEventModal] = useState(false);
 
   const handleCloseAddEventModal = () => setOpenAddEventModal(false);
-
-  const { mutate } = useSWRConfig();
-
-  const router = useRouter();
 
   // Todo: Pass month - get all events for current month by default.
   const { allEvents } = useAllEvents({ session });

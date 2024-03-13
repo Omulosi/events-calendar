@@ -1,9 +1,9 @@
 "use client";
-import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
-import React from "react";
 
-const BasicCalendar = () => {
-  return <DateCalendar />;
+import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
+
+const BasicCalendar = (props) => {
+  return <DateCalendar {...props} />;
 };
 
 export default BasicCalendar;

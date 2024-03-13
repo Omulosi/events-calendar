@@ -66,8 +66,10 @@ const AddEventForm = ({ handleCancel, eventDetails }) => {
 
         if (response.ok) {
           // Close modal
-          // router.push("/");
-          mutate("/api/event");
+          // router.push("/calendar");
+          // mutate("/api/event");
+          const userId = session?.user?.id;
+          mutate(`/api/event?user=${userId}`);
           handleCancel();
         }
       } catch (error) {
