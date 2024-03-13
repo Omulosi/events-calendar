@@ -1,1 +1,0 @@
-/** Popover to show event */

@@ -82,7 +82,7 @@ const AddEventForm = ({ handleCancel, eventDetails }) => {
   });
 
   return (
-    <Box>
+    <Box p={2}>
       <H5 mb={4}>Add Event</H5>
       <form onSubmit={handleSubmit}>
         <Scrollbar

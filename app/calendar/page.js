@@ -4,7 +4,7 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import EventContent from "@components/EventContent";
 import SideBar from "@components/SideBar";
 import { useRouter } from "next/navigation";
@@ -27,7 +27,7 @@ const EventCalendar = () => {
   console.log({ downXl });
 
   const [weekendsVisible, setWeekendsVisible] = useState(true);
-  const [openAddEventModal, setOpenAddEventModal] = useState(false);
+  const [openAddEventModal, setOpenAddEventModal] = useState(true);
   const [eventDetails, setEventDetails] = useState(null);
   const [currentEvent, setCurrentEvent] = useState(null);
   const [openCurrentEventModal, setOpenCurrentEventModal] = useState(false);
@@ -77,8 +77,7 @@ const EventCalendar = () => {
             backgroundColor: "rgb(243, 244, 249)",
           }}
         >
-          {/**  Add Event Modal */}
-
+          {/**  Add Event Modal  */}
           <AppModal open={openAddEventModal} handleClose={handleCloseAddEventModal}>
             <AddEventForm handleCancel={handleCloseAddEventModal} eventDetails={eventDetails} />
           </AppModal>
@@ -113,7 +112,7 @@ const EventCalendar = () => {
               weekends={weekendsVisible}
               events={allEvents}
               initialEvents={allEvents} // alternatively, use the `events` setting to fetch from a feed
-              select={handleDateSelect}
+              dateClick={handleDateSelect}
               eventContent={(event) => <EventContent eventInfo={event} />} // custom render function
               eventClick={handleEventClick}
               eventChange={function ({ event }) {

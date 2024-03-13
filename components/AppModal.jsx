@@ -1,3 +1,4 @@
+"use client";
 import { Box, Modal, styled } from "@mui/material";
 
 const Wrapper = styled(Box)(({ theme }) => ({
